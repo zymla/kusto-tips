@@ -3,6 +3,7 @@ Microsoft isn't evil, they just make really crappy operating systems.
 
 
 # Group by
+I had some issues trying to `GROUP BY` computed column with Kusto. It seems one has to use `__sql_substract()` instead of `-`. Also, the `EXPLAIN` from Kusto produced some invalid Kusto  code :(.
 ```
 SELECT id, col_1 - col_2 AS col_diff, COUNT(1) AS nb, MIN(TimeStamp) AS min_ts, MAX(TimeStamp) AS max_ts
 FROM table_name
