@@ -1,6 +1,28 @@
 # kusto-tips
 Microsoft isn't evil, they just make really crappy operating systems.
 
+# Python client library
+Doc @ [https://github.com/Azure/azure-kusto-python]
+## Install
+```
+pip install azure-kusto-data
+```
+## Query
+```
+from azure.kusto.data.exceptions import KustoServiceError
+from azure.kusto.data.helpers import dataframe_from_result_table
+from azure.kusto.data.request import KustoClient, KustoConnectionStringBuilder, ClientRequestProperties
+
+cluster = "https://XXXXXXXXX.kusto.windows.net"
+kcsb = KustoConnectionStringBuilder.with_aad_device_authentication(cluster, "XXXXXXX-UUID-XXXXX-XXXX")
+kclient = KustoClient(kcsb)
+
+db = "YOUR-KUSTO-DB-NAME"
+```
+```
+query="YOURTABLENAME|project *|limit 100"
+df=pd.DataFrame(json.loads(str(kclient.execute(db, query).primary_results[0]))['data'])
+```
 
 # Group by
 I had some issues trying to `GROUP BY` computed column with Kusto. It seems one has to use `__sql_substract()` instead of `-`. Also, the `EXPLAIN` from Kusto produced some invalid Kusto  code :(.
