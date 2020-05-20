@@ -40,3 +40,16 @@ table_name
 | project id, col_diff, nb, min_ts, max_ts
 | sort by id desc nulls first
 ```
+
+# Join
+```
+let Events = MyLogTable | where type=="Event" ;
+Events
+| where Name == "Start"
+| project Name, City, ActivityIdLeft = ActivityId, StartTime=timestamp
+| join (Events
+        | where Name == "Stop"
+        | project StopTime=timestamp, ActivityIdRight = ActivityId)
+    on $left.ActivityIdLeft == $right.ActivityIdRight
+| project City, ActivityId, StartTime, StopTime, Duration = StopTime - StartTime
+```
