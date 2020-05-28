@@ -35,7 +35,7 @@ df=pd.concat([pd.DataFrame(json.loads(str(kclient.execute(db, query.format("%01x
 ```
 query="""
 YOURTABLENAME
-| where substring(uuid, 1, 1)=='{}'
+| where substring(uuid, 1, 2)=='{}'
 | project uuid, col1, col2
 """
 df=pd.concat([pd.DataFrame(json.loads(str(kclient.execute(db, query.format("%02x" % x)).primary_results[0]))['data']) for x in tqdm(range(0,256))]).reset_index(drop=True)
