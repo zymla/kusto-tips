@@ -23,6 +23,16 @@ db = "YOUR-KUSTO-DB-NAME"
 query="YOURTABLENAME|project *|limit 100"
 df=pd.DataFrame(json.loads(str(kclient.execute(db, query).primary_results[0]))['data'])
 ```
+### Split big queries by UUID group
+```
+query="""
+YOURTABLENAME
+| where substring(uuid, 1, 1)=='{}'
+| project uuid, col1, col2
+"""
+df=pd.concat([pd.DataFrame(json.loads(str(kclient.execute(db, query.format(hex(x)[2])).primary_results[0]))['data']) for x in tqdm(range(0,16))]).reset_index(drop=True)
+```
+
 
 # Group by
 I had some issues trying to `GROUP BY` computed column with Kusto. It seems one has to use `__sql_substract()` instead of `-`. Also, the `EXPLAIN` from Kusto produced some invalid Kusto  code :(.
