@@ -30,7 +30,15 @@ YOURTABLENAME
 | where substring(uuid, 1, 1)=='{}'
 | project uuid, col1, col2
 """
-df=pd.concat([pd.DataFrame(json.loads(str(kclient.execute(db, query.format(hex(x)[2])).primary_results[0]))['data']) for x in tqdm(range(0,16))]).reset_index(drop=True)
+df=pd.concat([pd.DataFrame(json.loads(str(kclient.execute(db, query.format("%01x" % x)).primary_results[0]))['data']) for x in tqdm(range(0,16))]).reset_index(drop=True)
+```
+```
+query="""
+YOURTABLENAME
+| where substring(uuid, 1, 1)=='{}'
+| project uuid, col1, col2
+"""
+df=pd.concat([pd.DataFrame(json.loads(str(kclient.execute(db, query.format("%02x" % x)).primary_results[0]))['data']) for x in tqdm(range(0,256))]).reset_index(drop=True)
 ```
 
 
